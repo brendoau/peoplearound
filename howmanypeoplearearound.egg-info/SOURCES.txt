@@ -1,0 +1,14 @@
+README.md
+setup.py
+howmanypeoplearearound/__init__.py
+howmanypeoplearearound/__main__.py
+howmanypeoplearearound/analysis.py
+howmanypeoplearearound/colors.py
+howmanypeoplearearound/oui.py
+howmanypeoplearearound/plotlyjs.py
+howmanypeoplearearound.egg-info/PKG-INFO
+howmanypeoplearearound.egg-info/SOURCES.txt
+howmanypeoplearearound.egg-info/dependency_links.txt
+howmanypeoplearearound.egg-info/entry_points.txt
+howmanypeoplearearound.egg-info/requires.txt
+howmanypeoplearearound.egg-info/top_level.txt

@@ -1,0 +1,3 @@
+[console_scripts]
+howmanypeoplearearound = howmanypeoplearearound.__main__:main
+

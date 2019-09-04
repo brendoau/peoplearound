@@ -1,0 +1,12 @@
+Metadata-Version: 1.1
+Name: howmanypeoplearearound
+Version: 0.5.0
+Summary: A tshark wrapper to count the number of cellphones in the vicinity
+Home-page: https://github.com/schollz/howmanypeoplearearound
+Author: schollz
+Author-email: hypercube.platforms@gmail.com
+License: UNKNOWN
+Download-URL: https://github.com/schollz/howmanypeoplearearound/archive/v0.5.0.tar.gz
+Description: UNKNOWN
+Keywords: tshark,wifi,location
+Platform: UNKNOWN
