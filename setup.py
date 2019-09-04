@@ -1,3 +1,6 @@
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
 from setuptools import setup
 
 setup(
@@ -12,6 +15,7 @@ setup(
     keywords=['tshark', 'wifi', 'location'],
     classifiers=[],
     install_requires=[
+        requirements,
         "click",
         "netifaces",
         "pick",
