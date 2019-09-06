@@ -123,7 +123,7 @@ def get_config(
 # [START iot_http_run]
 
 
-def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes):
+def sendIoTCore(num_people, cellphone_people, project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes):
 
     jwt_token = create_jwt(
         project_id, private_key_file, algorithm)
@@ -149,8 +149,7 @@ def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file
     payload = {
         'sensorId': device_id,
         'scanDateTime': '2019-09-03 07:53:34.490 UTC',
-        'rssi': num_people,
-        'deviceId': device_id
+        'deviceIds': cellphone_people
     }
 
     jsonpayload = json.dumps(payload)
@@ -428,7 +427,7 @@ def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out,
             print("No one around, but you.")
         else:
             print("There are about %d people around." % num_people)
-            sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file, algorithm,
+            sendIoTCore(num_people, cellphone_people, project_id, registry_id, device_id, private_key_file, algorithm,
                         cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes)
     if out:
         with open(out, 'a') as f:
