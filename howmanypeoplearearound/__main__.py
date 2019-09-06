@@ -158,11 +158,11 @@ def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file
 
     # print('Publishing message {}/{}: \'{}\''.format(
     # i, num_messages, payload))
-    print('Publishing message {}: \'{}\''.format(num_messages, payload))
+    # print('Publishing message {}: \'{}\''.format(num_messages, payload))
     print('Publishing message {}: \'{}\''.format(num_messages, jsonpayload))
 
     resp = publish_message(
-        payload, message_type, base_url, project_id,
+        jsonpayload, message_type, base_url, project_id,
         cloud_region, registry_id, device_id, jwt_token)
 
     print('HTTP response: ', resp)
