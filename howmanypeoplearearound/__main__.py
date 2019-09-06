@@ -143,12 +143,23 @@ def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file
             project_id, private_key_file, algorithm)
         jwt_iat = datetime.datetime.utcnow()
 
-    payload = '{}/{}-payload-{}'.format(
-        registry_id, device_id,num_people)
+    # payload = '{}/{}-payload-{}'.format(
+    #     registry_id, device_id, num_people)
+
+    payload = {
+        'sensorId': device_id,
+        # scanTimestamp: n,
+        'scanTimestamp': '2019-09-03 07:53:34.490 UTC',
+        'rssi':  num_people,
+        'deviceId': num_people
+    }
+
+    jsonpayload = json.dumps(payload)
 
     # print('Publishing message {}/{}: \'{}\''.format(
     # i, num_messages, payload))
     print('Publishing message {}: \'{}\''.format(num_messages, payload))
+    print('Publishing message {}: \'{}\''.format(num_messages, jsonpayload))
 
     resp = publish_message(
         payload, message_type, base_url, project_id,
@@ -223,7 +234,7 @@ def fileToMacSet(path):
 @click.option('-f', '--pcap', help='read a pcap file instead of capturing')
 @click.option('--project_id', default='partner-summit-2019', help='GCP cloud project name')
 @click.option('--registry_id', default='pi-registry', help='Cloud IoT Core registry id')
-@click.option('--device_id', default='pi1sim', help='Cloud IoT Core device id')
+@click.option('--device_id', default='pi1', help='Cloud IoT Core device id')
 @click.option('--private_key_file', default='../rsa_private.pem', help='Path to private key file.')
 @click.option('--algorithm', default='RS256', help='The encryption algorithm to use to generate the JWT.')
 @click.option('--cloud_region', default='asia-east1', help='GCP cloud region')
