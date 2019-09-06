@@ -148,10 +148,9 @@ def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file
 
     payload = {
         'sensorId': device_id,
-        # scanTimestamp: n,
-        'scanTimestamp': '2019-09-03 07:53:34.490 UTC',
-        'rssi':  num_people,
-        'deviceId': num_people
+        'scanDateTime': '2019-09-03 07:53:34.490 UTC',
+        'rssi': num_people,
+        'deviceId': device_id
     }
 
     jsonpayload = json.dumps(payload)
