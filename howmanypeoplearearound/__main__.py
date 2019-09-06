@@ -299,7 +299,7 @@ def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out,
 
         dump_file = '/tmp/tshark-temp'
         # Scan with tshark
-        command = [tshark, '-I', '-i', adapter, '-a',
+        command = [tshark, '-i', adapter, '-a',
                    'duration:' + scantime, '-w', dump_file]
         if verbose:
             print(' '.join(command))
