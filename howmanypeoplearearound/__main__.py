@@ -29,14 +29,16 @@ _BASE_URL = 'https://cloudiotdevice.googleapis.com/v1'
 _BACKOFF_DURATION = 60
 
 # [START iot_http_jwt]
+
+
 def create_jwt(project_id, private_key_file, algorithm):
     token = {
-            # The time the token was issued.
-            'iat': datetime.datetime.utcnow(),
-            # Token expiration time.
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            # The audience field should always be set to the GCP project id.
-            'aud': project_id
+        # The time the token was issued.
+        'iat': datetime.datetime.utcnow(),
+        # Token expiration time.
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+        # The audience field should always be set to the GCP project id.
+        'aud': project_id
     }
 
     # Read the private key file.
@@ -44,10 +46,11 @@ def create_jwt(project_id, private_key_file, algorithm):
         private_key = f.read()
 
     print('Creating JWT using {} from private key file {}'.format(
-            algorithm, private_key_file))
+        algorithm, private_key_file))
 
     return jwt.encode(token, private_key, algorithm=algorithm).decode('ascii')
 # [END iot_http_jwt]
+
 
 @retry.Retry(
     predicate=retry.if_exception_type(AssertionError),
@@ -57,9 +60,9 @@ def publish_message(
         message, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
     headers = {
-            'authorization': 'Bearer {}'.format(jwt_token),
-            'content-type': 'application/json',
-            'cache-control': 'no-cache'
+        'authorization': 'Bearer {}'.format(jwt_token),
+        'content-type': 'application/json',
+        'cache-control': 'no-cache'
     }
 
     # Publish to the events or state topic based on the flag.
@@ -76,11 +79,11 @@ def publish_message(
         body = {'binary_data': msg_bytes.decode('ascii')}
     else:
         body = {
-          'state': {'binary_data': msg_bytes.decode('ascii')}
+            'state': {'binary_data': msg_bytes.decode('ascii')}
         }
 
     resp = requests.post(
-            publish_url, data=json.dumps(body), headers=headers)
+        publish_url, data=json.dumps(body), headers=headers)
 
     if (resp.status_code != 200):
         print('Response came back {}, retrying'.format(resp.status_code))
@@ -98,9 +101,9 @@ def get_config(
         version, message_type, base_url, project_id, cloud_region, registry_id,
         device_id, jwt_token):
     headers = {
-            'authorization': 'Bearer {}'.format(jwt_token),
-            'content-type': 'application/json',
-            'cache-control': 'no-cache'
+        'authorization': 'Bearer {}'.format(jwt_token),
+        'content-type': 'application/json',
+        'cache-control': 'no-cache'
     }
 
     basepath = '{}/projects/{}/locations/{}/registries/{}/devices/{}/'
@@ -118,10 +121,12 @@ def get_config(
 # [END iot_http_getconfig]
 
 # [START iot_http_run]
+
+
 def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes):
 
     jwt_token = create_jwt(
-            project_id, private_key_file, algorithm)
+        project_id, private_key_file, algorithm)
     jwt_iat = datetime.datetime.utcnow()
     jwt_exp_mins = jwt_expires_minutes
 
@@ -131,30 +136,31 @@ def sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file
 
     # Publish num_messages mesages to the HTTP bridge once per second.
     # for i in range(1, num_messages + 1):
-        seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
-        if seconds_since_issue > 60 * jwt_exp_mins:
-            print('Refreshing token after {}s').format(seconds_since_issue)
-            jwt_token = create_jwt(
-                    project_id, private_key_file, algorithm)
-            jwt_iat = datetime.datetime.utcnow()
+    seconds_since_issue = (datetime.datetime.utcnow() - jwt_iat).seconds
+    if seconds_since_issue > 60 * jwt_exp_mins:
+        print('Refreshing token after {}s').format(seconds_since_issue)
+        jwt_token = create_jwt(
+            project_id, private_key_file, algorithm)
+        jwt_iat = datetime.datetime.utcnow()
 
-        payload = '{}/{}-payload-{}'.format(
-                registry_id, device_id, i)
+    payload = '{}/{}-payload-{}'.format(
+        registry_id, device_id,num_people)
 
-        # print('Publishing message {}/{}: \'{}\''.format(
-                # i, num_messages, payload))
-        print('Publishing message {}: \'{}\''.format(num_messages, payload))
+    # print('Publishing message {}/{}: \'{}\''.format(
+    # i, num_messages, payload))
+    print('Publishing message {}: \'{}\''.format(num_messages, payload))
 
-        resp = publish_message(
-                payload, message_type, base_url, project_id,
-                cloud_region, registry_id, device_id, jwt_token)
+    resp = publish_message(
+        payload, message_type, base_url, project_id,
+        cloud_region, registry_id, device_id, jwt_token)
 
-        print('HTTP response: ', resp)
+    print('HTTP response: ', resp)
 
-        # Send events every second. State should not be updated as often
-        # time.sleep(1 if message_type == 'event' else 5)
+    # Send events every second. State should not be updated as often
+    # time.sleep(1 if message_type == 'event' else 5)
     print('Finished.')
 # [END iot_http_run]
+
 
 def which(program):
     """Determines whether program exists
@@ -191,10 +197,12 @@ def showTimer(timeleft):
         time.sleep(0.1)
     print("")
 
+
 def fileToMacSet(path):
     with open(path, 'r') as f:
         maclist = f.readlines()
     return set([x.strip() for x in maclist])
+
 
 @click.command()
 @click.option('-a', '--adapter', default='', help='adapter to use')
@@ -213,7 +221,6 @@ def fileToMacSet(path):
 @click.option('--sort', help='sort cellphone data by distance (rssi)', is_flag=True)
 @click.option('--targetmacs', help='read a file that contains target MAC addresses', default='')
 @click.option('-f', '--pcap', help='read a pcap file instead of capturing')
-# IoT
 @click.option('--project_id', default='partner-summit-2019', help='GCP cloud project name')
 @click.option('--registry_id', default='pi-registry', help='Cloud IoT Core registry id')
 @click.option('--device_id', default='pi1sim', help='Cloud IoT Core device id')
@@ -225,7 +232,6 @@ def fileToMacSet(path):
 @click.option('--message_type', default='event', help='telemetry event or a device state message.')
 @click.option('--base_url', default=_BASE_URL, help='Base URL for the Cloud IoT Core Device Service API')
 @click.option('--jwt_expires_minutes', type=int, default=20, help='Expiration time, in minutes, for JWT tokens.')
-
 def main(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out, allmacaddresses, nocorrection, loop, analyze, port, sort, targetmacs, pcap, project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes):
     if analyze != '':
         analyze_file(analyze, port)
@@ -233,13 +239,15 @@ def main(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out,
     if loop:
         while True:
             adapter = scan(adapter, scantime, verbose, dictionary, number,
-                 nearby, jsonprint, out, allmacaddresses, nocorrection, loop, sort, targetmacs, pcap)
+                           nearby, jsonprint, out, allmacaddresses, nocorrection, loop, sort, targetmacs, pcap,
+                           project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes)
     else:
         scan(adapter, scantime, verbose, dictionary, number,
-             nearby, jsonprint, out, allmacaddresses, nocorrection, loop, sort, targetmacs, pcap)
+             nearby, jsonprint, out, allmacaddresses, nocorrection, loop, sort, targetmacs, pcap,
+             project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes)
 
 
-def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out, allmacaddresses, nocorrection, loop, sort, targetmacs, pcap):
+def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out, allmacaddresses, nocorrection, loop, sort, targetmacs, pcap, project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes):
     """Monitor wifi signals to count the number of people around you"""
 
     # print("OS: " + os.name)
@@ -298,7 +306,6 @@ def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out,
         run_tshark = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         stdout, nothing = run_tshark.communicate()
-
 
         if not number:
             t1.join()
@@ -411,7 +418,8 @@ def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out,
             print("No one around, but you.")
         else:
             print("There are about %d people around." % num_people)
-            sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file, algorithm, cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes)
+            sendIoTCore(num_people, project_id, registry_id, device_id, private_key_file, algorithm,
+                        cloud_region, ca_certs, num_messages, message_type, base_url, jwt_expires_minutes)
     if out:
         with open(out, 'a') as f:
             data_dump = {'cellphones': cellphone_people, 'time': time.time()}
