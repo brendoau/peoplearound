@@ -146,24 +146,37 @@ def sendIoTCore(num_people, cellphone_people, project_id, registry_id, device_id
     # payload = '{}/{}-payload-{}'.format(
     #     registry_id, device_id, num_people)
 
-    payload = {
-        'sensorId': device_id,
-        'scanDateTime': '2019-09-03 07:53:34.490 UTC',
-        'deviceIds': cellphone_people
-    }
+    # loop cellphone_people, create separate payloads and publish multiple pub/sub messages
+    for person in cellphone_people:
+        
+        rssi = person["rssi"]
+        company = person["company"]
+        mac = person["mac"]
 
-    jsonpayload = json.dumps(payload)
+        print(rssi)
+        print(company)
+        print(mac)
 
-    # print('Publishing message {}/{}: \'{}\''.format(
-    # i, num_messages, payload))
-    # print('Publishing message {}: \'{}\''.format(num_messages, payload))
-    print('Publishing message {}: \'{}\''.format(num_messages, jsonpayload))
+        payload = {
+            'sensorId': device_id,
+            'scanDateTime': '2019-09-03 07:53:34.490 UTC',
+            'rssi': rssi,
+            'mac': mac,
+            'company': company
+        }
 
-    resp = publish_message(
-        jsonpayload, message_type, base_url, project_id,
-        cloud_region, registry_id, device_id, jwt_token)
+        jsonpayload = json.dumps(payload)
 
-    print('HTTP response: ', resp)
+        # print('Publishing message {}/{}: \'{}\''.format(
+        # i, num_messages, payload))
+        # print('Publishing message {}: \'{}\''.format(num_messages, payload))
+        print('Publishing message {}: \'{}\''.format(num_messages, jsonpayload))
+
+        resp = publish_message(
+            jsonpayload, message_type, base_url, project_id,
+            cloud_region, registry_id, device_id, jwt_token)
+
+        print('HTTP response: ', resp)
 
     # Send events every second. State should not be updated as often
     # time.sleep(1 if message_type == 'event' else 5)
