@@ -147,15 +147,16 @@ def sendIoTCore(num_people, cellphone_people, project_id, registry_id, device_id
     #     registry_id, device_id, num_people)
 
     # loop cellphone_people, create separate payloads and publish multiple pub/sub messages
+
     for person in cellphone_people:
         
         rssi = person["rssi"]
         company = person["company"]
         mac = person["mac"]
 
-        print(rssi)
-        print(company)
-        print(mac)
+        # print(rssi)
+        # print(company)
+        # print(mac)
 
         payload = {
             'sensorId': device_id,
@@ -323,7 +324,8 @@ def scan(adapter, scantime, verbose, dictionary, number, nearby, jsonprint, out,
         dump_file = '/tmp/tshark-temp'
         # Scan with tshark
         command = [tshark, '-i', adapter, '-a',
-                   'duration:' + scantime, '-w', dump_file]
+                   'duration:' + scantime, '-w', dump_file,
+                   '-Y', 'wlan.fc.type_subtype == 4']
         if verbose:
             print(' '.join(command))
         run_tshark = subprocess.Popen(
