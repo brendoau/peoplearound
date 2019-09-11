@@ -159,7 +159,8 @@ def sendIoTCore(num_people, cellphone_people, project_id, registry_id, device_id
 
         payload = {
             'sensorId': device_id,
-            'scanDateTime': '2019-09-03 07:53:34.490 UTC',
+            # 'scanDateTime': '2019-09-03 07:53:34.490 UTC',
+            'scanDateTime': datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             'rssi': rssi,
             'mac': mac,
             'company': company
